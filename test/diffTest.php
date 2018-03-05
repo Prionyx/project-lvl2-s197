@@ -12,5 +12,10 @@ class DiffTest extends TestCase
         //var_dump($test);
         $result = file_get_contents('test/fixtures/diff.json');
         $this->assertEquals($test, $result);
+
+        $test = \Diff\genDiff('pretty', 'test/fixtures/before.yml', 'test/fixtures/after.yml');
+        //var_dump($test);
+        $result = file_get_contents('test/fixtures/diff.yml');
+        $this->assertEquals($test, $result);
     }
 }
