@@ -1,0 +1,27 @@
+{
+"name": "prionyx/project-lv2-s197",
+"bin": ["bin/gendiff"],
+"license": "MIT",
+"authors": [
+  {
+    "name": "Andrey Draganchuk",
+    "email": "spirifex@gmail.com"
+  }
+],
+"scripts": {
+  "phpcs": "phpcs",
+  "phpunit": "phpunit"
+},
+"autoload": {
+  "files": [],
+  "psr-4": {
+  }
+},
+"require": {
+  "docopt/docopt": "^1.0"
+},
+  "require-dev": {
+      "squizlabs/php_codesniffer": "3.*",
+      "phpunit/phpunit": "^6.5"
+  }
+}
