@@ -19,3 +19,8 @@ Options:
   --format <fmt>                Report format [default: pretty]
 DOC;
 $args = Docopt::handle($doc);
+echo Diff\genDiff(
+    $args['--format'],
+    $args['<firstFile>'],
+    $args['<secondFile>']
+) . PHP_EOL;

@@ -13,8 +13,13 @@
   "phpunit": "phpunit"
 },
 "autoload": {
-  "files": [],
+  "files": ["src/diff.php", "src/parsers.php", "src/diffAST.php", "src/renders.php"],
   "psr-4": {
+    "Diff\\": "src",
+    "Diff\\test\\": "test",
+    "Diff\\Parsers\\": "src",
+    "Diff\\AST\\": "src",
+    "Diff\\Renders\\": "src"
   }
 },
 "require": {
