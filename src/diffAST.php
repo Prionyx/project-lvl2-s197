@@ -17,7 +17,7 @@ function getAST($content1, $content2)
       [
         "type" => 'children',
         "check" => function ($key, $content1, $content2) {
-            return ((in_array($key, array_keys($content1)) && in_array($key, array_keys($content2))) && (is_array($content1[$key]) || is_array($content2[$key]))) ? true : false;
+            return ((in_array($key, array_keys($content1)) && in_array($key, array_keys($content2))) && (is_array($content1[$key]) || is_array($content2[$key])));
         },
         "action" => function ($key, $content1, $content2) {
             return getAST($content1[$key], $content2[$key]);
@@ -26,7 +26,7 @@ function getAST($content1, $content2)
       [
         "type" => 'changed',
         "check" => function ($key, $content1, $content2) {
-            return (in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)) && $content1[$key] !== $content2[$key]) ? true : false;
+            return (in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)) && $content1[$key] !== $content2[$key]);
         },
         "action" => function ($key, $content1, $content2) {
             return ["type" => 'changed', 'key' => $key, 'value' => [$content2[$key], $content1[$key]]];
@@ -35,7 +35,7 @@ function getAST($content1, $content2)
       [
         "type" => 'unchanged',
         "check" => function ($key, $content1, $content2) {
-            return (in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)) && $content1[$key] === $content2[$key]) ? true : false;
+            return (in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)) && $content1[$key] === $content2[$key]);
         },
         "action" => function ($key, $content1, $content2) {
             return ["type" => 'unchanged', 'key' => $key, 'value' => $content1[$key]];
@@ -44,7 +44,7 @@ function getAST($content1, $content2)
       [
         "type" => 'added',
         "check" => function ($key, $content1, $content2) {
-            return (!in_array($key, array_keys($content1)) && in_array($key, array_keys($content2))) ? true : false;
+            return (!in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)));
         },
         "action" => function ($key, $content1, $content2) {
             return ["type" => 'added', 'key' => $key, 'value' => $content2[$key]];
@@ -53,7 +53,7 @@ function getAST($content1, $content2)
       [
         "type" => 'removed',
         "check" => function ($key, $content1, $content2) {
-            return (in_array($key, array_keys($content1)) && !in_array($key, array_keys($content2))) ? true : false;
+            return (in_array($key, array_keys($content1)) && !in_array($key, array_keys($content2)));
         },
         "action" => function ($key, $content1, $content2) {
             return ["type" => 'removed', 'key' => $key, 'value' => $content1[$key]];
@@ -63,8 +63,7 @@ function getAST($content1, $content2)
 
     $newKeys = array_unique(array_merge(array_keys($content1), array_keys($content2)));
     $result = array_reduce($newKeys, function ($acc, $key) use ($content1, $content2, $nodeTypes) {
-        $action = getNode($key, $content1, $content2, $nodeTypes);
-        $acc[] = $action;
+        $acc[] = getNode($key, $content1, $content2, $nodeTypes);
         return $acc;
     }, []);
 

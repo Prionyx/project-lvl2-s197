@@ -15,13 +15,13 @@ function prettyRender($ast)
     $report = array_map(function ($item) {
         switch ($item['type']) {
             case 'unchanged':
-                return '    ' . $item['key'] . ': ' . $item['value'];
+                return "    {$item['key']}: {$item['value']}";
             case 'changed':
-                return '  + ' . $item['key'] . ': ' . $item['value'][0] . "\n" . '  - ' . $item['key'] . ': ' . $item['value'][1];
+                return "  + {$item['key']}: {$item['value'][0]}\n  - {$item['key']}: {$item['value'][1]}";
             case 'added':
-                return '  + ' . $item['key'] . ': ' . $item['value'];
+                return "  + {$item['key']}: {$item['value']}";
             case 'removed':
-                return '  - ' . $item['key'] . ': ' . $item['value'];
+                return "  - {$item['key']}: {$item['value']}";
         }
     }, $ast);
 

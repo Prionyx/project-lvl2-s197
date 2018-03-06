@@ -4,7 +4,7 @@ namespace Diff\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function getParser($content, $format)
+function parse($content, $format)
 {
     switch ($format) {
         case 'json':
