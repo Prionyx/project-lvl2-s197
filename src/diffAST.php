@@ -2,12 +2,15 @@
 
 namespace Diff\AST;
 
+use Illuminate;
+
 function getNode($key, $content1, $content2, $nodeTypes)
 {
-    $action = array_filter($nodeTypes, function ($item) use ($key, $content1, $content2) {
-        return ($item['check']($key, $content1, $content2));
+    $types = collect($nodeTypes);
+    $action = $types->first(function ($item) use ($key, $content1, $content2) {
+        return $item['check']($key, $content1, $content2);
     });
-    $node = array_shift($action)['action']($key, $content1, $content2);
+    $node = $action['action']($key, $content1, $content2);
     return $node;
 }
 
@@ -30,6 +33,7 @@ function getAST($content1, $content2)
         },
         "action" => function ($key, $content1, $content2) {
             return ["type" => 'changed', 'key' => $key, 'value' => [$content2[$key], $content1[$key]]];
+            //return [["type" => 'removed', 'key' => $key, 'value' => $content1[$key]], ["type" => 'added', 'key' => $key, 'value' => $content2[$key]]];
         }
       ],
       [
