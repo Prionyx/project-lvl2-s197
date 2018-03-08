@@ -20,10 +20,16 @@ function getAST($content1, $content2)
       [
         "type" => 'children',
         "check" => function ($key, $content1, $content2) {
-            return ((in_array($key, array_keys($content1)) && in_array($key, array_keys($content2))) && (is_array($content1[$key]) || is_array($content2[$key])));
+            //return ((in_array($key, array_keys($content1)) && in_array($key, array_keys($content2))) && (is_array($content1[$key]) || is_array($content2[$key])));
+            return ((in_array($key, array_keys($content1)) && is_array($content1[$key])) || (in_array($key, array_keys($content2)) && is_array($content2[$key])));
         },
         "action" => function ($key, $content1, $content2) {
-            return getAST($content1[$key], $content2[$key]);
+            $arg1 = in_array($key, array_keys($content1)) ? $content1[$key] : [];
+            $arg2 = in_array($key, array_keys($content2)) ? $content2[$key] : [];
+
+            return ["type" => 'children', "key" => $key, "value" => getAST($arg1, $arg2)];
+            //return ["type" => 'children', "key" => $key, "value" => $value];
+            //return ["type" => 'children', "key" => $key, "value" => getAST($content1[$key], $content2[$key])];
         }
       ],
       [
@@ -71,5 +77,6 @@ function getAST($content1, $content2)
         return $acc;
     }, []);
 
+    //var_dump($result);
     return $result;
 }

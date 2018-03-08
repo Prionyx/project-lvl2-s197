@@ -14,6 +14,9 @@ function prettyRender($ast)
 {
     $report = array_map(function ($item) {
         switch ($item['type']) {
+            case 'children':
+                $newValue = prettyRender($item['value']);
+                return "    {$item['key']}: {$newValue}";
             case 'unchanged':
                 return "    {$item['key']}: {$item['value']}";
             case 'changed':
