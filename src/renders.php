@@ -50,3 +50,32 @@ function prettyRender($ast)
 
     return "{\n{$iter($ast, 1)}\n}\n";
 }
+
+function plainRender($ast)
+{
+    $iter = function ($ast, $parent) use (&$iter) {
+        $report = array_map(function ($item) use ($iter, $parent) {
+            switch ($item['type']) {
+                case 'children':
+                    $newValue = $iter($item['value'], $item['key'] . ".");
+                    return "{$parent}{$newValue}";
+                case 'childrenAdd':
+                    $key = array_keys($item['value'])[0];
+                    return "Property '{$parent}{$item['key']}' was added with value: 'complex value'\n";
+                case 'childrenRm':
+                    $key = array_keys($item['value'])[0];
+                    return "Property '{$parent}{$item['key']}' was removed\n";
+                case 'changed':
+                    return "Property '{$parent}{$item['key']}' was changed. From '{$item['value'][1]}' to '{$item['value'][0]}'\n";
+                case 'added':
+                    return "Property '{$parent}{$item['key']}' was added with value: '{$item['value']}'\n";
+                case 'removed':
+                    return "Property '{$parent}{$item['key']}' was removed\n";
+            }
+        }, $ast);
+
+        return (implode('', $report));
+    };
+
+    return $iter($ast, '');
+}
