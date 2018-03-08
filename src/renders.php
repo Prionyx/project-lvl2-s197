@@ -2,11 +2,13 @@
 
 namespace Diff\Renders;
 
-function getRender($file, $format)
+function getRender($ast, $format)
 {
     switch ($format) {
         case 'pretty':
-            return prettyRender($file);
+            return prettyRender($ast);
+        case 'plain':
+            return plainRender($ast);
     }
 }
 
@@ -26,6 +28,12 @@ function prettyRender($ast)
                 case 'children':
                     $newValue = $iter($item['value'], $level + 1);
                     return "{$spaces}    {$item['key']}: {\n{$newValue}\n{$spaces}    }";
+                case 'childrenAdd':
+                    $key = array_keys($item['value'])[0];
+                    return "{$spaces}  + {$item['key']}: {\n{$spaces}        {$key}: {$item['value'][$key]}\n{$spaces}    }";
+                case 'childrenRm':
+                    $key = array_keys($item['value'])[0];
+                    return "{$spaces}  - {$item['key']}: {\n{$spaces}        {$key}: {$item['value'][$key]}\n{$spaces}    }";
                 case 'unchanged':
                     return "{$spaces}    {$item['key']}: {$item['value']}";
                 case 'changed':
