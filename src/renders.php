@@ -91,24 +91,5 @@ function plainRender($ast)
 
 function jsonRender($ast)
 {
-    $iter = function ($ast) use (&$iter) {
-        $report = array_map(function ($item) use ($iter) {
-            switch ($item['type']) {
-                case 'nested':
-                    return [$item['key'] => $iter($item['children'])];
-                case 'unchanged':
-                    return [$item['key'] => $item['value']];
-                case 'changed':
-                    return [$item['key'] => $item['value'][0],$item['key'] => $item['value'][1]];
-                case 'added':
-                    return [$item['key'] => $item['value']];
-                case 'removed':
-                    return [$item['key'] => $item['value']];
-            }
-        }, $ast);
-
-        return $report;
-    };
-
-    return json_encode($iter($ast)) . "\n";
+    return json_encode($ast) . "\n";
 }
