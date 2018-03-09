@@ -15,17 +15,12 @@ function getAST($content1, $content2)
 {
     $nodeTypes = [
       [
-        "type" => 'children',
+        "type" => 'nested',
         "check" => function ($key, $content1, $content2) {
-            return ((in_array($key, array_keys($content1)) && is_array($content1[$key])) || (in_array($key, array_keys($content2)) && is_array($content2[$key])));
+            return ((in_array($key, array_keys($content1)) && in_array($key, array_keys($content2))) && (is_array($content1[$key]) && is_array($content2[$key])));
         },
         "action" => function ($key, $content1, $content2) {
-            if (!in_array($key, array_keys($content1))) {
-                return ["type" => 'childrenAdd', "key" => $key, "value" => $content2[$key]];
-            } elseif (!in_array($key, array_keys($content2))) {
-                return ["type" => 'childrenRm', "key" => $key, "value" => $content1[$key]];
-            }
-            return ["type" => 'children', "key" => $key, "value" => getAST($content1[$key], $content2[$key])];
+            return ["type" => 'nested', "key" => $key, "children" => getAST($content1[$key], $content2[$key])];
         }
       ],
       [
