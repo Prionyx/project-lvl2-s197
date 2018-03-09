@@ -2,6 +2,8 @@
 
 namespace Diff\Renders;
 
+use Illuminate;
+
 function getRender($ast, $format)
 {
     switch ($format) {
@@ -9,6 +11,8 @@ function getRender($ast, $format)
             return prettyRender($ast);
         case 'plain':
             return plainRender($ast);
+        case 'json':
+            return jsonRender($ast);
     }
 }
 
@@ -78,4 +82,41 @@ function plainRender($ast)
     };
 
     return $iter($ast, '');
+}
+
+function isEmpty($arr)
+{
+      return array_filter($arr, function ($item) {
+        return !empty($item);
+      });
+}
+
+function jsonRender($ast)
+{
+    $iter = function ($ast) use (&$iter) {
+        $report = array_map(function ($item) use ($iter) {
+            switch ($item['type']) {
+                case 'children':
+                    return [$item['key'] => $iter($item['value'])];
+                case 'childrenAdd':
+                    $key = array_keys($item['value'])[0];
+                    return [$item['key'] => $item['value']];
+                case 'childrenRm':
+                    $key = array_keys($item['value'])[0];
+                    return[$item['key'] => $item['value']];
+                case 'unchanged':
+                    return [$item['key'] => $item['value']];
+                case 'changed':
+                    return [$item['key'] => $item['value'][0],$item['key'] => $item['value'][1]];
+                case 'added':
+                    return [$item['key'] => $item['value']];
+                case 'removed':
+                    return [$item['key'] => $item['value']];
+            }
+        }, $ast);
+
+        return $report;
+    };
+
+    return json_encode($iter($ast)) . "\n";
 }
