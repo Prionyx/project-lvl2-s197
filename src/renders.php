@@ -16,15 +16,15 @@ function getRender($ast, $format)
     }
 }
 
-function stringify($item, $spaces, $operation)
+function stringify($item, $spaces, $operation, $arg)
 {
-    if (is_array($item['value'])) {
+    if (is_array($item[$arg])) {
         $key1 = $item['key'];
-        $key2 = array_keys($item['value'])[0];
-        $value = $item['value'][$key2];
+        $key2 = array_keys($item[$arg])[0];
+        $value = $item[$arg][$key2];
         return "{$spaces}  {$operation} {$key1}: {\n{$spaces}        {$key2}: {$value}\n    {$spaces}}";
     }
-    return "{$spaces}  {$operation} {$item['key']}: {$item['value']}";
+    return "{$spaces}  {$operation} {$item['key']}: {$item[$arg]}";
 }
 
 function prettyRender($ast)
@@ -48,9 +48,9 @@ function prettyRender($ast)
                 case 'changed':
                     return "{$spaces}  + {$item['key']}: {$item['newValue']}\n{$spaces}  - {$item['key']}: {$item['oldValue']}";
                 case 'added':
-                    return stringify($item, $spaces, '+');
+                    return stringify($item, $spaces, '+', 'newValue');
                 case 'removed':
-                    return stringify($item, $spaces, '-');
+                    return stringify($item, $spaces, '-', 'oldValue');
             }
         }, $ast);
 
@@ -71,10 +71,10 @@ function plainRender($ast)
                 case 'changed':
                     return "Property '{$parent}{$item['key']}' was changed. From '{$item['oldValue']}' to '{$item['newValue']}'\n";
                 case 'added':
-                    if (is_array($item['value'])) {
+                    if (is_array($item['newValue'])) {
                         return "Property '{$parent}{$item['key']}' was added with value: 'complex value'\n";
                     }
-                    return "Property '{$parent}{$item['key']}' was added with value: '{$item['value']}'\n";
+                    return "Property '{$parent}{$item['key']}' was added with value: '{$item['newValue']}'\n";
                 case 'removed':
                     return "Property '{$parent}{$item['key']}' was removed\n";
             }

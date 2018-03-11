@@ -49,7 +49,7 @@ function getAST($content1, $content2)
             return (!in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)));
         },
         "action" => function ($key, $content1, $content2) {
-            return ["type" => 'added', 'key' => $key, 'value' => $content2[$key]];
+            return ["type" => 'added', 'key' => $key, 'newValue' => $content2[$key]];
         }
       ],
       [
@@ -58,7 +58,7 @@ function getAST($content1, $content2)
             return (in_array($key, array_keys($content1)) && !in_array($key, array_keys($content2)));
         },
         "action" => function ($key, $content1, $content2) {
-            return ["type" => 'removed', 'key' => $key, 'value' => $content1[$key]];
+            return ["type" => 'removed', 'key' => $key, 'oldValue' => $content1[$key]];
         }
       ]
     ];
