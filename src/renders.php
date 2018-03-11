@@ -16,6 +16,18 @@ function getRender($ast, $format)
     }
 }
 
+function stringify($item, $spaces)
+{
+    $operation = ($item['type'] === 'added') ? '+' : '-';
+    if (is_array($item['value'])) {
+        $key1 = $item['key'];
+        $key2 = array_keys($item['value'])[0];
+        $value = $item['value'][$key2];
+        return "{$spaces}  {$operation} {$key1}: {\n{$spaces}        {$key2}: {$value}\n    {$spaces}}";
+    }
+    return "{$spaces}  {$operation} {$item['key']}: {$item['value']}";
+}
+
 function prettyRender($ast)
 {
     $spacesCount = function ($level) {
@@ -37,21 +49,9 @@ function prettyRender($ast)
                 case 'changed':
                     return "{$spaces}  + {$item['key']}: {$item['newValue']}\n{$spaces}  - {$item['key']}: {$item['oldValue']}";
                 case 'added':
-                    if (is_array($item['newValue'])) {
-                        $key1 = $item['key'];
-                        $key2 = array_keys($item['newValue'])[0];
-                        $value = $item['newValue'][$key2];
-                        return "{$spaces}  + {$key1}: {\n{$spaces}        {$key2}: {$value}\n    {$spaces}}";
-                    }
-                    return "{$spaces}  + {$item['key']}: {$item['newValue']}";
+                    return stringify($item, $spaces);
                 case 'removed':
-                    if (is_array($item['oldValue'])) {
-                        $key1 = $item['key'];
-                        $key2 = array_keys($item['oldValue'])[0];
-                        $value = $item['oldValue'][$key2];
-                        return "{$spaces}  - {$key1}: {\n{$spaces}        {$key2}: {$value}\n    {$spaces}}";
-                    }
-                    return "{$spaces}  - {$item['key']}: {$item['oldValue']}";
+                    return stringify($item, $spaces);
             }
         }, $ast);
 
@@ -72,10 +72,10 @@ function plainRender($ast)
                 case 'changed':
                     return "Property '{$parent}{$item['key']}' was changed. From '{$item['oldValue']}' to '{$item['newValue']}'\n";
                 case 'added':
-                    if (is_array($item['newValue'])) {
+                    if (is_array($item['value'])) {
                         return "Property '{$parent}{$item['key']}' was added with value: 'complex value'\n";
                     }
-                    return "Property '{$parent}{$item['key']}' was added with value: '{$item['newValue']}'\n";
+                    return "Property '{$parent}{$item['key']}' was added with value: '{$item['value']}'\n";
                 case 'removed':
                     return "Property '{$parent}{$item['key']}' was removed\n";
             }
