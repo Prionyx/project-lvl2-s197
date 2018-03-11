@@ -29,7 +29,9 @@ function getAST($content1, $content2)
             return (in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)) && $content1[$key] !== $content2[$key]);
         },
         "action" => function ($key, $content1, $content2) {
-            return ["type" => 'changed', 'key' => $key, 'value' => [$content2[$key], $content1[$key]]];
+            $oldValue = $content1[$key];
+            $newValue = $content2[$key];
+            return ["type" => 'changed', 'key' => $key, 'newValue' => $newValue, "oldValue" => $oldValue];
         }
       ],
       [
@@ -47,7 +49,7 @@ function getAST($content1, $content2)
             return (!in_array($key, array_keys($content1)) && in_array($key, array_keys($content2)));
         },
         "action" => function ($key, $content1, $content2) {
-            return ["type" => 'added', 'key' => $key, 'value' => $content2[$key]];
+            return ["type" => 'added', 'key' => $key, 'newValue' => $content2[$key]];
         }
       ],
       [
@@ -56,7 +58,7 @@ function getAST($content1, $content2)
             return (in_array($key, array_keys($content1)) && !in_array($key, array_keys($content2)));
         },
         "action" => function ($key, $content1, $content2) {
-            return ["type" => 'removed', 'key' => $key, 'value' => $content1[$key]];
+            return ["type" => 'removed', 'key' => $key, 'oldValue' => $content1[$key]];
         }
       ]
     ];
