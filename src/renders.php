@@ -46,12 +46,10 @@ function prettyRender($ast)
                     return "{$spaces}  + {$item['key']}: {$item['value']}";
                 case 'removed':
                     if (is_array($item['value'])) {
-                        if (is_array($item['value'])) {
-                            $key1 = $item['key'];
-                            $key2 = array_keys($item['value'])[0];
-                            $value = $item['value'][$key2];
-                            return "{$spaces}  - {$key1}: {\n{$spaces}        {$key2}: {$value}\n    {$spaces}}";
-                        }
+                        $key1 = $item['key'];
+                        $key2 = array_keys($item['value'])[0];
+                        $value = $item['value'][$key2];
+                        return "{$spaces}  - {$key1}: {\n{$spaces}        {$key2}: {$value}\n    {$spaces}}";
                     }
                     return "{$spaces}  - {$item['key']}: {$item['value']}";
             }
