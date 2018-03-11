@@ -16,9 +16,8 @@ function getRender($ast, $format)
     }
 }
 
-function stringify($item, $spaces)
+function stringify($item, $spaces, $operation)
 {
-    $operation = ($item['type'] === 'added') ? '+' : '-';
     if (is_array($item['value'])) {
         $key1 = $item['key'];
         $key2 = array_keys($item['value'])[0];
@@ -49,9 +48,9 @@ function prettyRender($ast)
                 case 'changed':
                     return "{$spaces}  + {$item['key']}: {$item['newValue']}\n{$spaces}  - {$item['key']}: {$item['oldValue']}";
                 case 'added':
-                    return stringify($item, $spaces);
+                    return stringify($item, $spaces, '+');
                 case 'removed':
-                    return stringify($item, $spaces);
+                    return stringify($item, $spaces, '-');
             }
         }, $ast);
 
